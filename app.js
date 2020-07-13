@@ -4,6 +4,7 @@ var express 		= require("express"),
 	mongoose 		= require("mongoose"),
 	passport		= require("passport"),
 	LocalStrategy	= require("passport-local"),
+	methodOverride	= require("method-override"),
 	Campground 		= require("./models/campground"),
 	Comment			= require("./models/comment"),
 	User			= require("./models/user"),
@@ -18,7 +19,8 @@ mongoose.connect("mongodb://localhost/yelp_camp");
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
-seedDB();
+app.use(methodOverride("_method"));
+// seedDB(); //seed the database
 
 // PASSPORT CONFIGURATION
 app.use(require("express-session")({
@@ -39,14 +41,6 @@ app.use(function(req, res, next){
 app.use("/", indexRoutes);
 app.use("/campgrounds", campgroundRoutes);
 app.use("/campgrounds/:id/comments", commentRoutes);
-
-
-
-// var campgrounds = [
-// 	{name: "Salmon Creek", image: "https://www.photosforclass.com/download/px_1687845"},
-// 	{name: "Granite Hill", image: "https://www.photosforclass.com/download/px_699558"},
-// 	{name: "Mocha's Rest", image: "https://www.photosforclass.com/download/px_2422265"}
-// ]
 
 
 app.listen(3000, function(){
